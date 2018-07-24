@@ -2,15 +2,38 @@
   "name": "tdd-workshop",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4"
-  },
+  "proxy": "http://localhost:8080",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "webpack --mode development",
+    "build": "webpack --mode production",
+    "conc": "concurrently \"npm run server\" \"react-scripts start\"",
+    "test": "cross-env NODE_ENV=test jest",
+    "server": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.4.0",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
+    "concurrently": "^3.6.0",
+    "cross-env": "^5.2.0",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jest": "^23.4.1",
+    "react-test-renderer": "^16.4.1",
+    "regenerator-runtime": "^0.12.0",
+    "webpack": "^4.16.2"
+  },
+  "jest": {
+    "verbose": true,
+    "setupTestFrameworkScriptFile": "<rootDir>/setupTest.js"
   }
 }
