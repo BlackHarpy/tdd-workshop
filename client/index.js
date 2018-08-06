@@ -22,6 +22,18 @@ class Foo extends React.Component {
 Foo.propTypes = propTypes;
 Foo.defaultProps = defaultProps;
 
+
+fetch('http://localhost:8080/ping')
+  .then(function (resp) {
+    resp.text().then(data => {
+      console.log(data);
+    });
+  })
+  .catch(function (error) {
+    // If there is any error you will catch them here
+  });
+
+
 export default Foo;
 
 //ReactDOM.render(<Foo />, document.getElementById("index"));
