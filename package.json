@@ -4,9 +4,9 @@
   "private": true,
   "proxy": "http://localhost:8080",
   "scripts": {
-    "start": "webpack --mode development",
+    "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
-    "conc": "concurrently \"npm run server\" \"react-scripts start\"",
+    "conc": "concurrently \"npm run server\" \"npm start\"",
     "test": "cross-env NODE_ENV=test jest",
     "server": "node server/index.js"
   },
@@ -30,7 +30,9 @@
     "jest": "^23.4.1",
     "react-test-renderer": "^16.4.1",
     "regenerator-runtime": "^0.12.0",
-    "webpack": "^4.16.2"
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
   },
   "jest": {
     "verbose": true,

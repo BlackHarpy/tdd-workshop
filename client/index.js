@@ -1,24 +1,8 @@
-import React, { PropTypes } from 'react';
+import React from "react";
+import ReactDOM from "react-dom";
 
-const propTypes = {};
+const Index = () => {
+  return <div>Hello React Refresh!</div>;
+};
 
-const defaultProps = {};
-
-class Foo extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="foo">
-        Bar
-      </div>
-    );
-  }
-}
-
-Foo.propTypes = propTypes;
-Foo.defaultProps = defaultProps;
-
-export default Foo;
+ReactDOM.render(<Index />, document.getElementById("index"));
