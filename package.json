@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
     "conc": "concurrently \"npm run server\" \"npm start\"",
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "cross-env NODE_ENV=test jest --watch",
     "server": "node server/index.js"
   },
   "dependencies": {
