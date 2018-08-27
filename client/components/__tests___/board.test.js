@@ -1,12 +1,13 @@
 import React from "react";
 import { shallow } from "enzyme";
 import Board from "../board";
+
 describe("Board Component", () => {
-  it("should render without throwing an error", function() {
+  it("Should render without throwing an error", function() {
     expect(shallow(<Board data={{}} />)).toBeTruthy;
   });
 
-  it("Should set initial state in component", () => {
+  it("Should set default initial state in component", () => {
     const boardComponent = shallow(<Board data={{}} />);
 
     expect(boardComponent.state("name")).toEqual("Untitled Board");
