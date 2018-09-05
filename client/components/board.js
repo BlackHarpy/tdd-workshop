@@ -1,4 +1,8 @@
 import React from "react";
+import { styles } from "../styles";
+
+import List from "./list";
+
 export default class Board extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +18,15 @@ export default class Board extends React.Component {
   }
 
   render() {
-    return <div>{this.props.data.name}</div>;
+    return (
+      <div style={styles.board}>
+        <div>{this.props.data.name}</div>
+
+        <div style={styles.boardLists}>
+          <List data={{}} />
+          <List data={{}} />
+        </div>
+      </div>
+    );
   }
 }

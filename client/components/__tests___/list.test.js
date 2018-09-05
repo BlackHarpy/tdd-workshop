@@ -19,6 +19,10 @@ describe("List Component", () => {
     expect(shallow(<List data={{}} />)).toBeTruthy;
   });
 
+  it("Should render with List data", () => {
+    expect(listComponent.contains("Test List")).toBe(true);
+  });
+
   it("Should set default initial state", () => {
     listComponent = shallow(<List data={{}} />);
     expect(listComponent.state("name")).toEqual("Untitled List");

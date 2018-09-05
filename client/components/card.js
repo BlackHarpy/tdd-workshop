@@ -1,4 +1,6 @@
 import React, { PropTypes } from "react";
+import { styles } from "../styles";
+
 export default class Card extends React.Component {
   constructor(props) {
     super(props);
@@ -21,6 +23,6 @@ export default class Card extends React.Component {
   }
 
   render() {
-    return <div>{this.props.data.name}</div>;
+    return <div style={styles.card}>{this.props.data.name}</div>;
   }
 }

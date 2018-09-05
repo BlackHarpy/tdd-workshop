@@ -17,7 +17,7 @@ describe("Card Component", function() {
   });
 
   it("Should render with Card data", () => {
-    expect(cardComponent.contains(<div>Test Card</div>)).toBe(true);
+    expect(cardComponent.contains("Test Card")).toBe(true);
   });
 
   it("Should set intial state", () => {
