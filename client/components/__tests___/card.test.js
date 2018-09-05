@@ -1,19 +1,42 @@
 import React from "react";
 import { shallow, render, mount } from "enzyme";
-import Foo from "../card";
-describe("A suite", function() {
-  it("should render without throwing an error", function() {
-    expect(shallow(<Foo />).contains(<div className="foo">Bar</div>)).toBe(
-      true
-    );
+import Card from "../card";
+describe("Card Component", function() {
+  let cardComponent = {};
+
+  beforeEach(() => {
+    const dataProps = {
+      name: "Test Card",
+      idList: 1
+    };
+    cardComponent = shallow(<Card data={dataProps} />);
   });
-  it('should be selectable by class "foo"', function() {
-    expect(shallow(<Foo />).is(".foo")).toBe(true);
+
+  it("Should render without throwing an error", () => {
+    expect(shallow(<Card data={{}} />)).toBeTruthy();
   });
-  it("should mount in a full DOM", function() {
-    expect(mount(<Foo />).find(".foo").length).toBe(1);
+
+  it("Should render with Card data", () => {
+    expect(cardComponent.contains(<div>Test Card</div>)).toBe(true);
   });
-  it("should render to static HTML", function() {
-    expect(render(<Foo />).text()).toEqual("Bar");
+
+  it("Should set intial state", () => {
+    const cardState = cardComponent.state();
+    const expectedState = {
+      name: "Test Card",
+      idList: 1
+    };
+
+    expect(cardState).toEqual(expectedState);
+  });
+
+  it("Should change Card name", () => {
+    cardComponent.instance().changeName("New Name");
+    expect(cardComponent.state("name")).toEqual("New Name");
+  });
+
+  it("Should move Card to List", () => {
+    cardComponent.instance().moveToList(2);
+    expect(cardComponent.state("idList")).toEqual(2);
   });
 });

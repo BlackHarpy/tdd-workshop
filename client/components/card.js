@@ -1,16 +1,26 @@
 import React, { PropTypes } from "react";
-
-const propTypes = {};
-const defaultProps = {};
-
-class Foo extends React.Component {
+export default class Card extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      name: props.data.name,
+      idList: props.data.idList
+    };
   }
+
+  changeName(newName) {
+    this.setState({
+      name: newName
+    });
+  }
+
+  moveToList(newListId) {
+    this.setState({
+      idList: newListId
+    });
+  }
+
   render() {
-    return <div className="foo">Bar</div>;
+    return <div>{this.props.data.name}</div>;
   }
 }
-Foo.propTypes = propTypes;
-Foo.defaultProps = defaultProps;
-export default Foo;

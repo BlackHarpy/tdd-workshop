@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 import Board from "../board";
 
 describe("Board Component", () => {
-  it("Should render without throwing an error", function() {
+  it("Should render without throwing an error", () => {
     expect(shallow(<Board data={{}} />)).toBeTruthy;
   });
 
