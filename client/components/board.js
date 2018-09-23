@@ -1,14 +1,17 @@
 import React from "react";
 import { styles } from "../styles";
 
+import KanbanService from "../services/kanban.service";
+
 import List from "./list";
 
 export default class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: props.data.name ? props.data.name : "Untitled Board",
-      lists: []
+      name: "My Board",
+      lists: [],
+      lastCardId: 0
     };
   }
 
@@ -20,66 +23,70 @@ export default class Board extends React.Component {
 
   addList() {
     this.setState({
-      lists: [
-        ...this.state.lists,
-        {
-          id: this.state.lists.length,
-          position: this.state.lists.length,
-          name: `List ${this.state.lists.length + 1}`
-        }
-      ]
+      lists: KanbanService.addListToBoard(this.state.lists)
     });
   }
 
-  deleteList(index) {
+  deleteList(idList) {
     this.setState({
-      lists: this.state.lists.filter((list, id) => index !== id)
+      lists: KanbanService.deleteList(this.state.lists, idList)
     });
   }
 
   changeListName(id, newName) {
     this.setState({
-      lists: this.state.lists.map(list => {
-        if (list.id === id) {
-          list.name = newName;
-        }
-        return list;
-      })
+      lists: KanbanService.changeListName(this.state.lists, id, newName)
     });
   }
 
-  moveElements(lists, id, newPosition) {
-    const element = lists.find(list => list.id === id);
-    const oldPosition = element.position;
-
-    return lists.map(list => {
-      if (list.id === id) {
-        list.position = newPosition;
-      } else {
-        if (newPosition > oldPosition) {
-          if (list.position <= newPosition) {
-            list.position--;
-          }
-        } else {
-          if (list.position >= newPosition) {
-            list.position++;
-          }
-        }
-      }
-      return list;
-    });
-  }
-
-  changePosition(id, newPosition) {
+  changeListPosition(id, newPosition) {
     this.setState({
-      lists: this.moveElements(this.state.lists, id, newPosition)
+      lists: KanbanService.changeListPosition(this.state.lists, id, newPosition)
+    });
+  }
+
+  addCard(idList, newCard) {
+    this.setState(
+      KanbanService.addCardToList(
+        { lists: this.state.lists, lastCardId: this.state.lastCardId },
+        idList,
+        newCard
+      )
+    );
+  }
+
+  removeCard(idList, idCard) {
+    this.setState({
+      lists: KanbanService.removeCard(this.state.lists, idList, idCard)
+    });
+  }
+
+  moveCardToList(idCard, idList, idNewList) {
+    this.setState({
+      lists: KanbanService.moveCardToList(
+        this.state.lists,
+        idCard,
+        idList,
+        idNewList
+      )
+    });
+  }
+
+  changeCardName(idList, idCard, newName) {
+    this.setState({
+      lists: KanbanService.changeCardName(
+        this.state.lists,
+        idList,
+        idCard,
+        newName
+      )
     });
   }
 
   render() {
     return (
       <div style={styles.board}>
-        <div>{this.props.data.name}</div>
+        <div>{this.state.name}</div>
         <div style={styles.boardLists}>
           {this.state.lists
             .sort((a, b) => {
