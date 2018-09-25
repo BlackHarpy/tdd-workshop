@@ -87,6 +87,7 @@ export default class Board extends React.Component {
     return (
       <div style={styles.board}>
         <div>{this.state.name}</div>
+        <button onClick={() => this.addList()}>Add List</button>
         <div style={styles.boardLists}>
           {this.state.lists
             .sort((a, b) => {

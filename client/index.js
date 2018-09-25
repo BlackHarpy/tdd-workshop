@@ -17,14 +17,14 @@ class App extends React.Component {
   }
 }
 
-// fetch("http://localhost:8080/ping")
-//   .then(function(resp) {
-//     resp.text().then(data => {
-//       console.log(data);
-//     });
-//   })
-//   .catch(function(error) {
-//     // If there is any error you will catch them here
-//   });
+fetch("http://localhost:8080/ping")
+  .then(function(resp) {
+    resp.text().then(data => {
+      console.log(data);
+    });
+  })
+  .catch(function(error) {
+    // If there is any error you will catch them here
+  });
 
 ReactDOM.render(<App />, document.getElementById("index"));

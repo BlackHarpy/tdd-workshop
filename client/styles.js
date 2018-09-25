@@ -2,10 +2,11 @@ export const styles = {
   board: {
     backgroundColor: "#75f6c4",
     width: "100%",
-    height: "100%",
+    height: "90%",
     display: "flex",
     flexDirection: "column",
-    padding: 20
+    padding: 20,
+    overflow: "scroll"
   },
   boardLists: {
     display: "flex"
