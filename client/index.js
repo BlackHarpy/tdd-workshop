@@ -17,7 +17,7 @@ class App extends React.Component {
   }
 }
 
-fetch("http://localhost:8080/ping")
+fetch("http://localhost:8080/board")
   .then(function(resp) {
     resp.text().then(data => {
       console.log(data);

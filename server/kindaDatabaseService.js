@@ -2,7 +2,7 @@ module.exports = {
   lists: [],
   cards: [],
 
-  selectAllLists: async id => {
+  selectAllLists: async function() {
     const activeLists = this.lists.filter(list => !list.isDeleted).map(list => {
       return {
         id: list.id,
@@ -10,13 +10,10 @@ module.exports = {
         position: list.position
       };
     });
-    if (activeLists.length) {
-      return activeLists;
-    }
-    return Promise.reject();
+    return activeLists;
   },
 
-  insertList: async listData => {
+  insertList: async function(listData) {
     const newList = {
       id: this.lists.length,
       position: listData.position,
@@ -32,7 +29,7 @@ module.exports = {
     };
   },
 
-  updateList: async updatedList => {
+  updateList: async function(updatedList) {
     const listIndex = this.lists.findIndex(list => list.id === updatedList.id);
     this.lists[listIndex] = {
       ...this.lists[listIndex],
@@ -43,7 +40,7 @@ module.exports = {
     };
   },
 
-  deleteList: async id => {
+  deleteList: async function(id) {
     const listIndex = this.lists.findIndex(list => list.id === id);
     const idsCardsInList = this.cards
       .filter(card => card.idList === id)
@@ -55,11 +52,11 @@ module.exports = {
     return true;
   },
 
-  selectCardsByList: async idList => {
+  selectCardsByList: async function(idList) {
     return this.cards.filter(card => card.idList === idList);
   },
 
-  insertCard: async cardData => {
+  insertCard: async function(cardData) {
     const newCard = {
       id: this.cards.length,
       position: cardData.position,
@@ -76,7 +73,7 @@ module.exports = {
     };
   },
 
-  updateCard: async updatedCard => {
+  updateCard: async function(updatedCard) {
     const cardIndex = this.cards.findIndex(card => card.id === updatedCard.id);
     this.cards[cardIndex] = {
       ...this.cards[cardIndex],
@@ -87,7 +84,7 @@ module.exports = {
     };
   },
 
-  deleteCard: async id => {
+  deleteCard: async function(id) {
     const cardIndex = this.cards.findIndex(card => card.id === id);
     this.cards[cardIndex].isDeleted = true;
     return Promise.resolve();

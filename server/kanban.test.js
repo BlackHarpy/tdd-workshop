@@ -34,11 +34,25 @@ fdescribe("Kanban Module", () => {
         })
       );
 
-      dbLibrary.selectCardsByList.mockReturnValue(
-        new Promise(resolve => {
-          resolve(cards);
-        })
-      );
+      dbLibrary.selectCardsByList
+        .mockReturnValueOnce(
+          new Promise(resolve => {
+            resolve([{ id: 4, name: "Task 4", position: 0, idList: 1 }]);
+          })
+        )
+        .mockReturnValueOnce(
+          new Promise(resolve => {
+            resolve([{ id: 3, name: "Task 3", position: 0, idList: 2 }]);
+          })
+        )
+        .mockReturnValueOnce(
+          new Promise(resolve => {
+            resolve([
+              { id: 1, name: "Task 1", position: 0, idList: 3 },
+              { id: 2, name: "Task 2", position: 1, idList: 3 }
+            ]);
+          })
+        );
 
       const result = await kanban.getAllListsFromBoard();
 
@@ -60,8 +74,8 @@ fdescribe("Kanban Module", () => {
           name: "Done",
           position: 2,
           cards: [
-            { id: 2, name: "Task 2", position: 1, idList: 3 },
-            { id: 1, name: "Task 1", position: 0, idList: 3 }
+            { id: 1, name: "Task 1", position: 0, idList: 3 },
+            { id: 2, name: "Task 2", position: 1, idList: 3 }
           ]
         }
       ];
@@ -73,7 +87,7 @@ fdescribe("Kanban Module", () => {
     });
 
     it("Should return an error on list select exception", async () => {
-      dbLibrary.selectListById.mockReturnValue(Promise.reject());
+      dbLibrary.selectAllLists.mockReturnValue(Promise.reject());
 
       const result = await kanban.getAllListsFromBoard();
 
