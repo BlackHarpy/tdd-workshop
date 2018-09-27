@@ -1,6 +1,21 @@
 import KanbanService from "../kanban.service";
 
+function mockFetch(data) {
+  return jest.fn().mockImplementation(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve(data)
+    })
+  );
+}
+
 describe("Kanban Service", () => {
+  it("Should fetch board data", async () => {
+    window.fetch = mockFetch([{ id: 1, name: "List 1" }]);
+    const result = await KanbanService.getBoardLists();
+    expect(window.fetch).toHaveBeenCalledWith("http://localhost:8080/board");
+    expect(result).toEqual([{ id: 1, name: "List 1" }]);
+  });
   describe("List Methods", () => {
     describe("Basic List nmethods", () => {
       it("Should change list name", () => {

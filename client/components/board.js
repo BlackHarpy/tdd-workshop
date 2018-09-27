@@ -15,6 +15,12 @@ export default class Board extends React.Component {
     };
   }
 
+  async componentDidMount() {
+    this.setState({
+      lists: await KanbanService.getBoardLists()
+    });
+  }
+
   changeName(newName) {
     this.setState({
       name: newName

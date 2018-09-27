@@ -31,7 +31,7 @@ describe("Server index", () => {
       });
   });
 
-  fit("should respond with data", function(done) {
+  it("should respond with data", function(done) {
     kanban.getAllListsFromBoard.mockReturnValue(
       new Promise(resolve => {
         resolve([

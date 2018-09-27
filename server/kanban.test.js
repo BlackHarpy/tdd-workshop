@@ -25,7 +25,7 @@ const cards = [
   { id: 4, name: "Task 4", position: 0, idList: 1 }
 ];
 
-fdescribe("Kanban Module", () => {
+describe("Kanban Module", () => {
   describe("List Methods", () => {
     it("Should return the lists of the board", async () => {
       dbLibrary.selectAllLists.mockReturnValue(
@@ -83,17 +83,6 @@ fdescribe("Kanban Module", () => {
       expect(result).toEqual({
         status: 200,
         data: expected
-      });
-    });
-
-    it("Should return an error on list select exception", async () => {
-      dbLibrary.selectAllLists.mockReturnValue(Promise.reject());
-
-      const result = await kanban.getAllListsFromBoard();
-
-      expect(result).toEqual({
-        status: 500,
-        error: "Database error"
       });
     });
 

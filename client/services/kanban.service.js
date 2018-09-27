@@ -28,6 +28,10 @@ function updatePositions(array) {
 }
 
 const KanbanService = {
+  getBoardLists: async () => {
+    return await (await fetch("http://localhost:8080/board")).json();
+  },
+
   changeListName: (inputList, id, newName) => {
     return inputList.map(list => {
       if (list.id === id) {

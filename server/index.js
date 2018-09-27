@@ -29,7 +29,7 @@ app.get("/", function(req, res) {
 app.get("/board", async (req, res, next) => {
   try {
     const board = await kanban.getAllListsFromBoard();
-    res.status(200).json(board);
+    res.status(200).json(board.data);
   } catch (e) {
     //this will eventually be handled by your error handling middleware
     next(e);

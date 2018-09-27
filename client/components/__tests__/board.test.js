@@ -5,6 +5,7 @@ import List from "../list";
 import KanbanService from "../../services/kanban.service";
 
 jest.mock("../../services/kanban.service", () => ({
+  getBoardLists: jest.fn(() => []),
   changeListName: jest.fn(() => []),
   addListToBoard: jest.fn(() => []),
   deleteList: jest.fn(() => []),
@@ -31,6 +32,12 @@ describe("Board Component", () => {
       };
 
       expect(boardComponent.state()).toEqual(expectedState);
+    });
+
+    it("Should retrieve server data on componentDidMount", () => {
+      const boardComponent = shallow(<Board />);
+      boardComponent.instance().componentDidMount();
+      expect(KanbanService.getBoardLists).toHaveBeenCalled();
     });
   });
 
