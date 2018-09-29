@@ -34,29 +34,32 @@ describe("Server index", () => {
   it("should respond with data", function(done) {
     kanban.getAllListsFromBoard.mockReturnValue(
       new Promise(resolve => {
-        resolve([
-          {
-            id: 1,
-            name: "To Do",
-            position: 0,
-            cards: [{ id: 4, name: "Task 4", position: 0, idList: 1 }]
-          },
-          {
-            id: 2,
-            name: "Doing",
-            position: 1,
-            cards: [{ id: 3, name: "Task 3", position: 0, idList: 2 }]
-          },
-          {
-            id: 3,
-            name: "Done",
-            position: 2,
-            cards: [
-              { id: 1, name: "Task 1", position: 0, idList: 3 },
-              { id: 2, name: "Task 2", position: 1, idList: 3 }
-            ]
-          }
-        ]);
+        resolve({
+          status: 200,
+          data: [
+            {
+              id: 1,
+              name: "To Do",
+              position: 0,
+              cards: [{ id: 4, name: "Task 4", position: 0, idList: 1 }]
+            },
+            {
+              id: 2,
+              name: "Doing",
+              position: 1,
+              cards: [{ id: 3, name: "Task 3", position: 0, idList: 2 }]
+            },
+            {
+              id: 3,
+              name: "Done",
+              position: 2,
+              cards: [
+                { id: 1, name: "Task 1", position: 0, idList: 3 },
+                { id: 2, name: "Task 2", position: 1, idList: 3 }
+              ]
+            }
+          ]
+        });
       })
     );
 

@@ -1,4 +1,6 @@
 import React from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
 import { styles } from "../styles";
 
 import KanbanService from "../services/kanban.service";
@@ -15,6 +17,13 @@ export default class Board extends React.Component {
     };
   }
 
+  onDragEnd(result) {
+    console.log(result);
+    const listId = result.draggableId;
+    const newPosition = result.destination.index;
+    this.changeListPosition(listId, newPosition);
+  }
+
   async componentDidMount() {
     this.setState({
       lists: await KanbanService.getBoardLists()
@@ -28,8 +37,10 @@ export default class Board extends React.Component {
   }
 
   addList() {
+    const result = KanbanService.addListToBoard(this.state.lists);
+    console.log(result);
     this.setState({
-      lists: KanbanService.addListToBoard(this.state.lists)
+      lists: result
     });
   }
 
@@ -52,13 +63,13 @@ export default class Board extends React.Component {
   }
 
   addCard(idList, newCard) {
-    this.setState(
-      KanbanService.addCardToList(
+    this.setState({
+      lists: KanbanService.addCardToList(
         { lists: this.state.lists, lastCardId: this.state.lastCardId },
         idList,
         newCard
       )
-    );
+    });
   }
 
   removeCard(idList, idCard) {
@@ -91,19 +102,42 @@ export default class Board extends React.Component {
 
   render() {
     return (
-      <div style={styles.board}>
-        <div>{this.state.name}</div>
-        <button onClick={() => this.addList()}>Add List</button>
-        <div style={styles.boardLists}>
-          {this.state.lists
-            .sort((a, b) => {
-              return a.position - b.position;
-            })
-            .map((listData, index) => (
-              <List key={index} data={listData} />
-            ))}
-        </div>
-      </div>
+      <DragDropContext onDragEnd={result => this.onDragEnd(result)}>
+        <Droppable droppableId="droppable-1" direction="horizontal">
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={styles.board}
+            >
+              <div>{this.state.name}</div>
+              <button onClick={() => this.addList()}>Add List</button>
+              <div style={styles.boardLists}>
+                {this.state.lists
+                  .sort((a, b) => {
+                    return a.position - b.position;
+                  })
+                  .map((listData, index) => (
+                    <Draggable
+                      draggableId={listData.id}
+                      index={listData.position}
+                      key={index}
+                    >
+                      {(provided, snapshot) => (
+                        <List
+                          key={index}
+                          data={listData}
+                          innerRef={provided.innerRef}
+                          provided={provided}
+                        />
+                      )}
+                    </Draggable>
+                  ))}
+              </div>
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     );
   }
 }

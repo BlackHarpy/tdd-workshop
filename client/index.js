@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+import { DragDropContext } from "react-beautiful-dnd";
+
 import Board from "./components/board";
 
 class App extends React.Component {

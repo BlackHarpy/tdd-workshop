@@ -45,7 +45,7 @@ const KanbanService = {
     return [
       ...inputLists,
       {
-        id: inputLists.length,
+        id: inputLists.length + 1,
         position: inputLists.length,
         name: `List ${inputLists.length + 1}`,
         cards: []

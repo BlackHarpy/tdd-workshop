@@ -9,8 +9,15 @@ export default class List extends React.Component {
   }
 
   render() {
+    const { provided, innerRef } = this.props;
+
     return (
-      <div style={styles.list}>
+      <div
+        style={styles.list}
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+        ref={innerRef}
+      >
         <div>{this.props.data.name}</div>
         <div style={styles.listCards}>
           <Card data={{ name: "Test Card 1" }} />
