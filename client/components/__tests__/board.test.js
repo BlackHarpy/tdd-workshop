@@ -1,8 +1,10 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import Board from "../board";
 import List from "../list";
 import KanbanService from "../../services/kanban.service";
+
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 jest.mock("../../services/kanban.service", () => ({
   getBoardLists: jest.fn(() => []),
@@ -19,11 +21,13 @@ jest.mock("../../services/kanban.service", () => ({
 describe("Board Component", () => {
   describe("Basic tests", () => {
     it("Should render without throwing an error", () => {
-      expect(shallow(<Board />)).toBeTruthy;
+      expect(shallow(<Board provided={{ droppableProps: {} }} />)).toBeTruthy;
     });
 
     it("Should set initial state in component given a prop", () => {
-      const boardComponent = shallow(<Board />);
+      const boardComponent = shallow(
+        <Board provided={{ droppableProps: {} }} />
+      );
 
       const expectedState = {
         name: "My Board",
@@ -35,7 +39,9 @@ describe("Board Component", () => {
     });
 
     it("Should retrieve server data on componentDidMount", () => {
-      const boardComponent = shallow(<Board />);
+      const boardComponent = shallow(
+        <Board provided={{ droppableProps: {} }} />
+      );
       boardComponent.instance().componentDidMount();
       expect(KanbanService.getBoardLists).toHaveBeenCalled();
     });
@@ -43,12 +49,16 @@ describe("Board Component", () => {
 
   describe("Board methods", () => {
     it("Should render with Board data", () => {
-      const boardComponent = shallow(<Board />);
+      const boardComponent = shallow(
+        <Board provided={{ droppableProps: {} }} />
+      );
       expect(boardComponent.contains(<div>My Board</div>)).toEqual(true);
     });
 
     it("Should change Board name", () => {
-      const boardComponent = shallow(<Board />);
+      const boardComponent = shallow(
+        <Board provided={{ droppableProps: {} }} />
+      );
       boardComponent.instance().changeName("New name");
 
       expect(boardComponent.state("name")).toEqual("New name");
@@ -58,12 +68,16 @@ describe("Board Component", () => {
   describe("Lists methods", () => {
     describe("Basic List methods", () => {
       it("Should render lists in order", () => {
-        const boardComponent = shallow(<Board />);
+        const boardComponent = shallow(
+          <Board provided={{ droppableProps: {} }} />
+        );
+
         boardComponent.setState({
           lists: [{ position: 0 }, { position: 2 }, { position: 1 }]
         });
 
         boardComponent.update();
+
         const lists = boardComponent.find(List);
 
         expect(lists.at(0).props().data.position).toEqual(0);
@@ -72,7 +86,9 @@ describe("Board Component", () => {
       });
 
       it("Should change list name", () => {
-        const boardComponent = shallow(<Board />);
+        const boardComponent = shallow(
+          <Board provided={{ droppableProps: {} }} />
+        );
         boardComponent.setState({
           lists: [{ id: 0, position: 0, name: "List 1" }]
         });
@@ -89,7 +105,9 @@ describe("Board Component", () => {
 
     describe("Add List", () => {
       it("Should create a new list", () => {
-        const boardComponent = shallow(<Board />);
+        const boardComponent = shallow(
+          <Board provided={{ droppableProps: {} }} />
+        );
         boardComponent.instance().addList();
 
         expect(KanbanService.addListToBoard).toHaveBeenCalledWith([]);
@@ -98,7 +116,9 @@ describe("Board Component", () => {
 
     describe("Remove List", () => {
       it("Should delete a list", () => {
-        const boardComponent = shallow(<Board />);
+        const boardComponent = shallow(
+          <Board provided={{ droppableProps: {} }} />
+        );
         boardComponent.setState({
           lists: [{ id: 0 }, { id: 1 }, { id: 2 }]
         });
@@ -114,7 +134,9 @@ describe("Board Component", () => {
 
     describe("Move List", () => {
       it("Should change list position", () => {
-        const boardComponent = shallow(<Board />);
+        const boardComponent = shallow(
+          <Board provided={{ droppableProps: {} }} />
+        );
         boardComponent.setState({
           lists: [
             { id: 0, position: 0, name: "List 1" },
@@ -139,7 +161,9 @@ describe("Board Component", () => {
 
   describe("Basic cards methods", () => {
     it("Should change card name", () => {
-      const boardComponent = shallow(<Board />);
+      const boardComponent = shallow(
+        <Board provided={{ droppableProps: {} }} />
+      );
 
       boardComponent.setState({
         lists: [
@@ -164,7 +188,9 @@ describe("Board Component", () => {
 
   describe("Add cards methods", () => {
     it("Should add card to list", () => {
-      const boardComponent = shallow(<Board />);
+      const boardComponent = shallow(
+        <Board provided={{ droppableProps: {} }} />
+      );
 
       boardComponent.setState({
         lists: [{ id: 0, cards: [] }, { id: 1, cards: [] }]
@@ -181,7 +207,9 @@ describe("Board Component", () => {
 
   describe("Remove card methods", () => {
     it("Should remove card in a list", () => {
-      const boardComponent = shallow(<Board />);
+      const boardComponent = shallow(
+        <Board provided={{ droppableProps: {} }} />
+      );
 
       boardComponent.setState({
         lists: [{ id: 0, cards: [{ id: 0 }, { id: 1 }] }]
@@ -199,7 +227,9 @@ describe("Board Component", () => {
 
   describe("Card moving tests", () => {
     it("Should move card to another list", () => {
-      const boardComponent = shallow(<Board />);
+      const boardComponent = shallow(
+        <Board provided={{ droppableProps: {} }} />
+      );
 
       boardComponent.setState({
         lists: [

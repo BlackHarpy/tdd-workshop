@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import { DragDropContext } from "react-beautiful-dnd";
 
 import Board from "./components/board";
+import BoardDroppable from "./components/drag-n-drop/BoardDroppable";
 
 class App extends React.Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class App extends React.Component {
   render() {
     return (
       <div style={{ height: "100%" }}>
-        <Board data={{ name: "Board 1" }} />
+        <BoardDroppable />
       </div>
     );
   }

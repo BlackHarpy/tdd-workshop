@@ -94,8 +94,9 @@ const KanbanService = {
     };
   },
 
-  moveCardToList: (lists, idList, idCard, idNewList) => {
-    const cardToMove = lists[idList].cards[idCard];
+  moveCardToList: (lists, idCard, idList, idNewList) => {
+    const listIndex = lists.findIndex(list => list.id === idList);
+    const cardToMove = lists[listIndex].cards.find(card => card.id === idCard);
     return lists.map(list => {
       if (list.id === idList) {
         list.cards = list.cards.filter(card => card.id !== idCard);

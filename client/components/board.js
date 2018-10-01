@@ -17,13 +17,6 @@ export default class Board extends React.Component {
     };
   }
 
-  onDragEnd(result) {
-    console.log(result);
-    const listId = result.draggableId;
-    const newPosition = result.destination.index;
-    this.changeListPosition(listId, newPosition);
-  }
-
   async componentDidMount() {
     this.setState({
       lists: await KanbanService.getBoardLists()
@@ -38,7 +31,6 @@ export default class Board extends React.Component {
 
   addList() {
     const result = KanbanService.addListToBoard(this.state.lists);
-    console.log(result);
     this.setState({
       lists: result
     });
@@ -101,43 +93,27 @@ export default class Board extends React.Component {
   }
 
   render() {
+    const { provided } = this.props;
     return (
-      <DragDropContext onDragEnd={result => this.onDragEnd(result)}>
-        <Droppable droppableId="droppable-1" direction="horizontal">
-          {(provided, snapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={styles.board}
-            >
-              <div>{this.state.name}</div>
-              <button onClick={() => this.addList()}>Add List</button>
-              <div style={styles.boardLists}>
-                {this.state.lists
-                  .sort((a, b) => {
-                    return a.position - b.position;
-                  })
-                  .map((listData, index) => (
-                    <Draggable
-                      draggableId={listData.id}
-                      index={listData.position}
-                      key={index}
-                    >
-                      {(provided, snapshot) => (
-                        <List
-                          key={index}
-                          data={listData}
-                          innerRef={provided.innerRef}
-                          provided={provided}
-                        />
-                      )}
-                    </Draggable>
-                  ))}
-              </div>
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <div style={styles.board}>
+        <div>{this.state.name}</div>
+        <button onClick={() => this.addList()}>Add List</button>
+        <div
+          style={styles.boardLists}
+          {...provided.droppableProps}
+          ref={provided.innerRef}
+        >
+          {this.state.lists
+            ? this.state.lists
+                .sort((a, b) => {
+                  return a.position - b.position;
+                })
+                .map((listData, index) => (
+                  <List key={index} data={listData} provided={provided} />
+                ))
+            : null}
+        </div>
+      </div>
     );
   }
 }

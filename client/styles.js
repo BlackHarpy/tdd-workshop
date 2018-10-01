@@ -20,7 +20,8 @@ export const styles = {
   listCards: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    minHeight: 10
   },
   card: {
     backgroundColor: "#e1eae6",

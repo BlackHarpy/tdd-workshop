@@ -38,7 +38,7 @@
     "webpack-dev-server": "^3.1.9"
   },
   "jest": {
-    "verbose": true,
+    "verbose": false,
     "testURL": "http://localhost",
     "setupTestFrameworkScriptFile": "<rootDir>/setupTest.js"
   }

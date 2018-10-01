@@ -1,23 +1,46 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { shallow, mount, render } from "enzyme";
 import Card from "../card";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
 describe("Card Component", function() {
   let cardComponent = {};
 
   beforeEach(() => {
     const dataProps = {
+      id: 1,
       name: "Test Card",
+      position: 0,
       idList: 1
     };
-    cardComponent = shallow(<Card data={dataProps} />);
+    cardComponent = shallow(
+      <Card data={dataProps} provided={{ draggableProps: {} }} />
+    );
   });
 
   it("Should render without throwing an error", () => {
-    expect(shallow(<Card data={{}} />)).toBeTruthy();
+    expect(
+      shallow(<Card data={{}} provided={{ draggableProps: {} }} />)
+    ).toBeTruthy();
   });
 
   it("Should render with Card data", () => {
-    expect(cardComponent.contains("Test Card")).toBe(true);
+    const dataProps = {
+      id: 1,
+      name: "Test Card",
+      position: 0,
+      idList: 1
+    };
+    const htmlCardComponent = render(
+      <DragDropContext onDragEnd={() => {}}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <Card data={dataProps} provided={provided} />
+          )}
+        </Droppable>
+      </DragDropContext>
+    );
+    expect(htmlCardComponent.text()).toEqual("Test Card");
   });
 
   it("Should set intial state", () => {
@@ -28,15 +51,5 @@ describe("Card Component", function() {
     };
 
     expect(cardState).toEqual(expectedState);
-  });
-
-  it("Should change Card name", () => {
-    cardComponent.instance().changeName("New Name");
-    expect(cardComponent.state("name")).toEqual("New Name");
-  });
-
-  it("Should move Card to List", () => {
-    cardComponent.instance().moveToList(2);
-    expect(cardComponent.state("idList")).toEqual(2);
   });
 });
