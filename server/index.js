@@ -62,10 +62,7 @@ app.delete("/board/lists/:listId", async (req, res, next) => {
 
 app.post("/board/lists/:listId/cards", async (req, res, next) => {
   try {
-    const response = await kanban.addCard(
-      parseInt(req.params.listId),
-      req.body
-    );
+    const response = await kanban.addCard(req.body);
     res.status(response.status).json(response.data);
   } catch (e) {
     next(e);

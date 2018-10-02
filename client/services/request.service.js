@@ -27,6 +27,9 @@ export default {
   deleteList: async idList => {
     return makeRequest(`/lists/${idList}`, "DELETE");
   },
+  postCard: async (idList, newData) => {
+    return makeRequest(`/lists/${idList}/cards`, "POST", newData);
+  },
   putCard: async (idList, idCard, newData) => {
     return makeRequest(`/lists/${idList}/cards/${idCard}`, "PUT", newData);
   },

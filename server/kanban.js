@@ -43,11 +43,11 @@ module.exports = {
       return { status: 500, error: "Database error" };
     }
   },
-  addCard: async (idList, cardInfo) => {
+  addCard: async cardInfo => {
     try {
       const newCard = {
         ...cardInfo,
-        idList
+        name: `Task ${(await dbLibrary.selectCardsCount()) + 1}`
       };
       const savedCard = await dbLibrary.insertCard(newCard);
       return { status: 200, data: savedCard };

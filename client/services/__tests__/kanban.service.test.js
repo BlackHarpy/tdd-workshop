@@ -15,6 +15,7 @@ jest.mock("../request.service", () => ({
   postList: jest.fn(() => []),
   putList: jest.fn(() => []),
   deleteList: jest.fn(() => []),
+  postCard: jest.fn(() => []),
   putCard: jest.fn(() => []),
   deleteCard: jest.fn(() => [])
 }));
@@ -146,16 +147,16 @@ describe("Kanban Service", () => {
 
         const lists = [
           {
-            id: 0,
+            id: 1,
             name: "List 1",
-            cards: [{ id: 0, name: "Card Test" }]
+            cards: [{ id: 1, name: "Card Test" }]
           }
         ];
 
         const result = await KanbanService.changeCardName(
           lists,
-          0,
-          0,
+          1,
+          1,
           "New Name"
         );
         expect(result[0].cards[0].name).toEqual("New Name");
@@ -163,51 +164,26 @@ describe("Kanban Service", () => {
     });
 
     describe("Add Card Methods", () => {
-      it("Should create a card in a list", () => {
-        const board = {
-          lists: [{ id: 0, cards: [] }, { id: 1, cards: [] }],
-          idLastCard: 0
-        };
-        const result = KanbanService.addCardToList(board, 0, {
-          name: "Task 1"
-        });
+      it("Should create a card in a list", async () => {
+        RequestService.postCard.mockReturnValue(
+          Promise.resolve({
+            id: 1,
+            idList: 2,
+            name: "Task 1",
+            position: 0
+          })
+        );
 
-        expect(result.lists[0].cards).toHaveLength(1);
-        expect(result.lists[0].cards[0].id).toEqual(0);
-        expect(result.lists[0].cards[0].name).toEqual("Task 1");
-      });
+        const lists = [
+          { id: 1, cards: [], position: 1 },
+          { id: 2, cards: [], position: 0 }
+        ];
 
-      it("Should update idLastCard on add", () => {
-        const board = {
-          lists: [{ id: 0, cards: [] }, { id: 1, cards: [] }],
-          idLastCard: 0
-        };
-        const result = KanbanService.addCardToList(board, 0, {
-          name: "Task 1"
-        });
+        const result = await KanbanService.addCardToList(lists);
 
-        expect(result.idLastCard).toEqual(1);
-      });
-
-      it("Should mantain consistent id when adding cards to different lists", () => {
-        const board = {
-          lists: [
-            {
-              id: 0,
-              position: 0,
-              name: "List 1",
-              cards: [{ id: 0, name: "Task 1" }]
-            },
-            { id: 1, position: 1, name: "List 2", cards: [] }
-          ],
-          idLastCard: 1
-        };
-
-        const result = KanbanService.addCardToList(board, 1, {
-          name: "Task 2"
-        });
-
-        expect(result.lists[1].cards[0].id).toEqual(1);
+        expect(result[1].cards).toHaveLength(1);
+        expect(result[1].cards[0].id).toEqual(1);
+        expect(result[1].cards[0].name).toEqual("Task 1");
       });
     });
 

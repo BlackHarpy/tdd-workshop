@@ -85,23 +85,20 @@ const KanbanService = {
     });
   },
 
-  addCardToList: (board, idList, newCard) => {
-    return {
-      lists: board.lists.map(list => {
-        if (list.id === idList) {
-          list.cards = [
-            ...list.cards,
-            {
-              id: board.idLastCard,
-              position: list.cards.length,
-              ...newCard
-            }
-          ];
-        }
-        return list;
-      }),
-      idLastCard: board.idLastCard + 1
+  addCardToList: async lists => {
+    const firstList = lists.find(list => list.position === 0);
+    const newCard = {
+      idList: firstList.id,
+      position: firstList.position
     };
+
+    const result = await RequestService.postCard(firstList.id, newCard);
+    return lists.map(list => {
+      if (list.position === 0) {
+        list.cards = [...list.cards, result];
+      }
+      return list;
+    });
   },
 
   moveCardToList: async (lists, idCard, idList, idNewList) => {
@@ -109,7 +106,8 @@ const KanbanService = {
     const cardToMove = lists[listIndex].cards.find(card => card.id === idCard);
     cardToMove.position = lists[listIndex].cards.length - 1;
     await RequestService.putCard(idList, idCard, {
-      position: lists[listIndex].cards.length - 1
+      idList: idNewList,
+      position: lists[listIndex].cards.length
     });
 
     return lists.map(list => {

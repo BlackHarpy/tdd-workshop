@@ -57,13 +57,9 @@ export default class Board extends React.Component {
     });
   }
 
-  addCard(idList, newCard) {
+  async addCard() {
     this.setState({
-      lists: KanbanService.addCardToList(
-        { lists: this.state.lists, lastCardId: this.state.lastCardId },
-        idList,
-        newCard
-      )
+      lists: await KanbanService.addCardToList(this.state.lists)
     });
   }
 
@@ -99,9 +95,13 @@ export default class Board extends React.Component {
     const { provided } = this.props;
     return (
       <div style={styles.board}>
-        <div>{this.state.name}</div>
-        <button onClick={() => this.addList()}>Add List</button>
-        <button onClick={() => this.addCard()}>Add Card</button>
+        <div style={styles.boardHeader}>
+          <div>{this.state.name}</div>
+          <div style={styles.boardActions}>
+            <a onClick={() => this.addList()}>Add List</a>
+            <a onClick={() => this.addCard()}>Add Card</a>
+          </div>
+        </div>
 
         <div
           style={styles.boardLists}

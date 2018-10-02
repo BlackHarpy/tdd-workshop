@@ -50,31 +50,38 @@ export default class Card extends React.Component {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            {this.state.isEditingName ? (
-              <input
-                type="text"
-                onKeyPress={e => {
-                  this.onEnterHandler(e);
-                }}
-                defaultValue={this.props.data.name}
-              />
-            ) : (
-              <div
-                onDoubleClick={() => {
-                  this.callOnDoubleClickHandler();
-                }}
-                style={styles.card}
-                ref={provided.innerRef}
-                {...provided.dragHandleProps}
-              >
-                {this.props.data.name}
+            <div style={styles.card}>
+              <div style={styles.cardInterior}>
+                {this.state.isEditingName ? (
+                  <input
+                    style={{ width: 245 }}
+                    type="text"
+                    onKeyPress={e => {
+                      this.onEnterHandler(e);
+                    }}
+                    defaultValue={this.props.data.name}
+                  />
+                ) : (
+                  <div
+                    onDoubleClick={() => {
+                      this.callOnDoubleClickHandler();
+                    }}
+                    ref={provided.innerRef}
+                    {...provided.dragHandleProps}
+                  >
+                    {this.props.data.name}
+                  </div>
+                )}
+                <button
+                  style={{ ...styles.deleteButton, backgroundColor: "#c4e2e2" }}
+                  onClick={() => {
+                    this.onDeleteClickHandler();
+                  }}
+                >
+                  x
+                </button>
               </div>
-            )}
-            <button
-              onClick={() => {
-                this.onDeleteClickHandler();
-              }}
-            />
+            </div>
           </div>
         )}
       </Draggable>

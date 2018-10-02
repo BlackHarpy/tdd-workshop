@@ -43,6 +43,7 @@ export default class List extends React.Component {
             <div style={styles.list}>
               {this.state.isEditingName ? (
                 <input
+                  style={styles.listNameInput}
                   type="text"
                   onKeyPress={e => {
                     this.onEnterHandler(e);
@@ -52,6 +53,7 @@ export default class List extends React.Component {
               ) : (
                 <div
                   ref={provided.innerRef}
+                  style={styles.listTitle}
                   {...provided.dragHandleProps}
                   onDoubleClick={() => {
                     this.callOnDoubleClickHandler();
@@ -59,10 +61,13 @@ export default class List extends React.Component {
                 >
                   {this.props.data.name}
                   <button
+                    style={styles.deleteButton}
                     onClick={() => {
                       this.onDeleteClickHandler();
                     }}
-                  />
+                  >
+                    x
+                  </button>
                 </div>
               )}
 

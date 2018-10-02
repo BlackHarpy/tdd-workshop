@@ -60,13 +60,17 @@ module.exports = {
   },
 
   selectCardsByList: async function(idList) {
-    return this.cards.filter(card => card.idList === idList);
+    return this.cards.filter(card => card.idList === idList && !card.isDeleted);
+  },
+
+  selectCardsCount: async function() {
+    return this.cards.length;
   },
 
   insertCard: async function(cardData) {
     const newCard = {
       id: this.cards.length + 1,
-      position: cardData.position,
+      position: this.cards.length,
       name: cardData.name,
       idList: cardData.idList,
       isDeleted: false

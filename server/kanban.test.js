@@ -6,11 +6,12 @@ jest.mock("./kindaDatabaseService", () => ({
   selectListById: jest.fn(() => []),
   updateList: jest.fn(() => []),
   deleteList: jest.fn(() => []),
-  insertCard: jest.fn(() => []),
+  insertCard: jest.fn(() => {}),
   updateCard: jest.fn(() => []),
   deleteCard: jest.fn(() => []),
   selectAllLists: jest.fn(() => []),
-  selectCardsByList: jest.fn(() => [])
+  selectCardsByList: jest.fn(() => []),
+  selectCardsCount: jest.fn(() => {})
 }));
 
 const lists = [
@@ -176,24 +177,39 @@ describe("Kanban Module", () => {
   });
 
   describe("Cards Methods", () => {
+    it("Should call Add Card DB Service with correct parameters", async () => {
+      dbLibrary.selectCardsCount.mockReturnValue(Promise.resolve(10));
+
+      const body = { idList: 3, position: 0 };
+
+      await kanban.addCard(body);
+
+      expect(dbLibrary.insertCard).toHaveBeenCalledWith({
+        name: "Task 11",
+        idList: 3,
+        position: 0
+      });
+    });
     it("Should insert a card in a list", async () => {
+      dbLibrary.lists = { length: 10 };
+      dbLibrary.selectCardsCount.mockReturnValue(Promise.resolve(10));
       dbLibrary.insertCard.mockReturnValue(
         new Promise(resolve => {
           resolve({
             id: 10,
-            name: "Test Card",
+            name: "Task 10",
             position: 0,
             idList: 3
           });
         })
       );
-      const body = { name: "Test List", position: 0 };
+      const body = { idList: 3, position: 0 };
 
-      const result = await kanban.addCard(3, body);
+      const result = await kanban.addCard(body);
 
       expect(result).toEqual({
         status: 200,
-        data: { id: 10, name: "Test Card", position: 0, idList: 3 }
+        data: { id: 10, name: "Task 10", position: 0, idList: 3 }
       });
     });
 
@@ -240,6 +256,9 @@ describe("Kanban Module", () => {
     });
 
     it("Should delete a card", async () => {
+      dbLibrary.selectCardsByList.mockReturnValue(
+        Promise.resolve([{ id: 1, cards: [] }])
+      );
       dbLibrary.deleteCard.mockReturnValue(Promise.resolve());
 
       const result = await kanban.deleteCard(10);

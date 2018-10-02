@@ -40,7 +40,7 @@ describe("Card Component", function() {
         </Droppable>
       </DragDropContext>
     );
-    expect(htmlCardComponent.text()).toEqual("Test Card");
+    expect(htmlCardComponent.find("Test Card")).toBeTruthy();
   });
 
   it("Should set intial state", () => {

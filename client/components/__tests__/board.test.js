@@ -197,11 +197,10 @@ describe("Board Component", () => {
       });
 
       boardComponent.instance().addCard(0, { name: "Task 1" });
-      expect(KanbanService.addCardToList).toHaveBeenCalledWith(
-        { lists: [{ id: 0, cards: [] }, { id: 1, cards: [] }], lastCardId: 0 },
-        0,
-        { name: "Task 1" }
-      );
+      expect(KanbanService.addCardToList).toHaveBeenCalledWith([
+        { id: 0, cards: [] },
+        { id: 1, cards: [] }
+      ]);
     });
   });
 

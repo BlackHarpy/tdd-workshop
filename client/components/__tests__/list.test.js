@@ -26,6 +26,6 @@ describe("List Component", () => {
         </Droppable>
       </DragDropContext>
     );
-    expect(htmlListComponent.text()).toEqual("Test List");
+    expect(htmlListComponent.find("Test List")).toBeTruthy();
   });
 });
