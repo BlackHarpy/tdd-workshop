@@ -47,9 +47,62 @@ describe("Card Component", function() {
     const cardState = cardComponent.state();
     const expectedState = {
       name: "Test Card",
-      idList: 1
+      idList: 1,
+      isEditingName: false
     };
 
     expect(cardState).toEqual(expectedState);
+  });
+
+  it("Should set isEditingName on true on double click event", () => {
+    const dataProps = {
+      id: 1,
+      name: "Test Card",
+      position: 0,
+      idList: 1
+    };
+    const cardComponent = shallow(<Card data={dataProps} provided={{}} />);
+
+    cardComponent.instance().callOnDoubleClickHandler();
+
+    expect(cardComponent.state("isEditingName")).toEqual(true);
+  });
+
+  it("Should set isEditing value on false after enter key press", () => {
+    const dataProps = {
+      id: 2,
+      name: "Test Card",
+      position: 0,
+      idList: 1
+    };
+    const cardComponent = shallow(
+      <Card data={dataProps} provided={{}} nameChangeHandler={() => {}} />
+    );
+
+    cardComponent.setState({ isEditingName: true });
+    cardComponent.update();
+
+    cardComponent
+      .instance()
+      .onEnterHandler({ key: "Enter", target: { value: "New Name" } });
+
+    expect(cardComponent.state("isEditingName")).toEqual(false);
+  });
+
+  it("Should call deleteHandler on card delete button press", () => {
+    const spy = jest.fn();
+    const dataProps = {
+      id: 2,
+      name: "Test Card",
+      position: 0,
+      idList: 1
+    };
+    const cardComponent = shallow(
+      <Card data={dataProps} provided={{}} deleteHandler={spy} />
+    );
+
+    cardComponent.instance().onDeleteClickHandler();
+
+    expect(spy).toHaveBeenCalledWith(1, 2);
   });
 });

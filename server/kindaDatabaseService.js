@@ -24,7 +24,7 @@ module.exports = {
 
   insertList: async function(listData) {
     const newList = {
-      id: this.lists.length,
+      id: this.lists.length + 1,
       position: listData.position,
       name: listData.name,
       isDeleted: false
@@ -44,9 +44,7 @@ module.exports = {
       ...this.lists[listIndex],
       ...updatedList
     };
-    return {
-      ...updatedList
-    };
+    return this.lists[listIndex];
   },
 
   deleteList: async function(id) {
@@ -67,7 +65,7 @@ module.exports = {
 
   insertCard: async function(cardData) {
     const newCard = {
-      id: this.cards.length,
+      id: this.cards.length + 1,
       position: cardData.position,
       name: cardData.name,
       idList: cardData.idList,
@@ -88,9 +86,7 @@ module.exports = {
       ...this.cards[cardIndex],
       ...updatedCard
     };
-    return {
-      ...updatedCard
-    };
+    return this.cards[cardIndex];
   },
 
   deleteCard: async function(id) {

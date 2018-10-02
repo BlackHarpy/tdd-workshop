@@ -1,63 +1,88 @@
 import KanbanService from "../kanban.service";
+import RequestService from "../request.service";
 
-function mockFetch(data) {
-  return jest.fn().mockImplementation(() =>
-    Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve(data)
-    })
-  );
-}
+// function mockFetch(data) {
+//   return jest.fn().mockImplementation(() =>
+//     Promise.resolve({
+//       ok: true,
+//       json: () => Promise.resolve(data)
+//     })
+//   );
+// }
+
+jest.mock("../request.service", () => ({
+  getBoard: jest.fn(() => []),
+  postList: jest.fn(() => []),
+  putList: jest.fn(() => []),
+  deleteList: jest.fn(() => []),
+  putCard: jest.fn(() => []),
+  deleteCard: jest.fn(() => [])
+}));
 
 describe("Kanban Service", () => {
   it("Should fetch board data", async () => {
-    window.fetch = mockFetch([{ id: 1, name: "List 1" }]);
+    RequestService.getBoard.mockReturnValue(
+      Promise.resolve([{ id: 1, name: "List 1" }])
+    );
     const result = await KanbanService.getBoardLists();
-    expect(window.fetch).toHaveBeenCalledWith("http://localhost:8080/board");
     expect(result).toEqual([{ id: 1, name: "List 1" }]);
   });
+
   describe("List Methods", () => {
-    describe("Basic List nmethods", () => {
-      it("Should change list name", () => {
+    describe("Basic List methods", () => {
+      it("Should change list name", async () => {
         const inputList = [{ id: 0, position: 0, name: "List 1" }];
 
-        const result = KanbanService.changeListName(inputList, 0, "List Test");
+        const result = await KanbanService.changeListName(
+          inputList,
+          0,
+          "List Test"
+        );
 
         expect(result[0].name).toEqual("List Test");
       });
 
       describe("Add List Methods", () => {
-        it("Should create a new list", () => {
-          const result = KanbanService.addListToBoard([]);
+        it("Should create a new list", async () => {
+          RequestService.postList.mockReturnValue(
+            Promise.resolve({ id: 1, name: "List 1" })
+          );
+          const result = await KanbanService.addListToBoard([]);
           expect(result).toHaveLength(1);
           expect(result[0].name).toEqual("List 1");
         });
 
-        it("Should create two lists", () => {
+        it("Should create two lists", async () => {
           const lists = [{ name: "List 1" }];
+          RequestService.postList.mockReturnValue(
+            Promise.resolve({ id: 1, name: "List 2" })
+          );
 
-          const result = KanbanService.addListToBoard(lists);
+          const result = await KanbanService.addListToBoard(lists);
           expect(result).toHaveLength(2);
           expect(result[1].name).toEqual("List 2");
         });
       });
 
       describe("Delete List Methods", () => {
-        it("Should  delete a list", () => {
+        it("Should  delete a list", async () => {
+          RequestService.deleteList.mockReturnValue(Promise.resolve(true));
           const lists = [{ id: 0 }, { id: 1 }];
-          const result = KanbanService.deleteList(lists, 0);
+          const result = await KanbanService.deleteList(lists, 0);
           expect(result).toHaveLength(1);
           expect(result[0].id).toEqual(1);
         });
 
-        it("Should update lists positions when one is removed", () => {
+        it("Should update lists positions when one is removed", async () => {
+          RequestService.deleteList.mockReturnValue(Promise.resolve(true));
+
           const lists = [
             { id: 0, position: 0 },
             { id: 1, position: 1 },
             { id: 2, position: 2 }
           ];
 
-          const result = KanbanService.deleteList(lists, 0);
+          const result = await KanbanService.deleteList(lists, 0);
 
           expect(result).toHaveLength(2);
           expect(result[0].position).toEqual(0);
@@ -66,14 +91,18 @@ describe("Kanban Service", () => {
       });
 
       describe("Move List Methods", () => {
-        it("Should change list position", () => {
+        it("Should change list position", async () => {
           const inputLists = [
             { id: 0, position: 0 },
             { id: 1, position: 1 },
             { id: 2, position: 2 }
           ];
 
-          const result = KanbanService.changeListPosition(inputLists, 0, 2);
+          const result = await KanbanService.changeListPosition(
+            inputLists,
+            0,
+            2
+          );
 
           const expected = [
             { id: 0, position: 2 },
@@ -84,7 +113,7 @@ describe("Kanban Service", () => {
           expect(result).toEqual(expected);
         });
 
-        it("Should update lists positions after one is moved", () => {
+        it("Should update lists positions after one is moved", async () => {
           const inputLists = [
             { id: 0, position: 0 },
             { id: 1, position: 1 },
@@ -92,7 +121,11 @@ describe("Kanban Service", () => {
             { id: 3, position: 3 }
           ];
 
-          const result = KanbanService.changeListPosition(inputLists, 3, 2);
+          const result = await KanbanService.changeListPosition(
+            inputLists,
+            3,
+            2
+          );
           const expected = [
             { id: 0, position: 0 },
             { id: 1, position: 1 },
@@ -108,7 +141,9 @@ describe("Kanban Service", () => {
 
   describe("Card Methods", () => {
     describe("Basic Card Methods", () => {
-      it("Should change a card name", () => {
+      it("Should change a card name", async () => {
+        RequestService.putCard.mockReturnValue(Promise.resolve(true));
+
         const lists = [
           {
             id: 0,
@@ -117,7 +152,12 @@ describe("Kanban Service", () => {
           }
         ];
 
-        const result = KanbanService.changeCardName(lists, 0, 0, "New Name");
+        const result = await KanbanService.changeCardName(
+          lists,
+          0,
+          0,
+          "New Name"
+        );
         expect(result[0].cards[0].name).toEqual("New Name");
       });
     });
@@ -172,16 +212,20 @@ describe("Kanban Service", () => {
     });
 
     describe("Remove Card Methods", () => {
-      it("Should remove a card on a list", () => {
+      it("Should remove a card on a list", async () => {
+        RequestService.deleteCard.mockReturnValue(Promise.resolve(true));
+
         const lists = [{ id: 0, cards: [{ id: 0 }, { id: 1 }] }];
 
-        const result = KanbanService.removeCard(lists, 0, 0);
+        const result = await KanbanService.removeCard(lists, 0, 0);
 
         expect(result[0].cards).toHaveLength(1);
         expect(result[0].cards[0].id).toEqual(1);
       });
 
-      it("Should update remaining cards positions when a card is removed from a list", () => {
+      it("Should update remaining cards positions when a card is removed from a list", async () => {
+        RequestService.deleteCard.mockReturnValue(Promise.resolve(true));
+
         const lists = [
           {
             id: 0,
@@ -193,7 +237,7 @@ describe("Kanban Service", () => {
           }
         ];
 
-        const result = KanbanService.removeCard(lists, 0, 1);
+        const result = await KanbanService.removeCard(lists, 0, 1);
 
         expect(result[0].cards[0].position).toEqual(0);
         expect(result[0].cards[1].position).toEqual(1);
@@ -201,7 +245,7 @@ describe("Kanban Service", () => {
     });
 
     describe("Move Card Methods", () => {
-      it("Should move card to another list", () => {
+      it("Should move card to another list", async () => {
         const lists = [
           {
             id: 0,
@@ -211,14 +255,14 @@ describe("Kanban Service", () => {
           { id: 1, position: 1, cards: [] }
         ];
 
-        const result = KanbanService.moveCardToList(lists, 0, 0, 1);
+        const result = await KanbanService.moveCardToList(lists, 0, 0, 1);
 
         expect(result[0].cards).toHaveLength(1);
         expect(result[1].cards).toHaveLength(1);
         expect(result[1].cards[0].id).toEqual(0);
       });
 
-      it("Should set last position when moving a card to another list", () => {
+      it("Should set last position when moving a card to another list", async () => {
         const lists = [
           {
             id: 0,
@@ -228,7 +272,7 @@ describe("Kanban Service", () => {
           { id: 1, position: 1, cards: [{ id: 2, position: 0 }] }
         ];
 
-        const result = KanbanService.moveCardToList(lists, 0, 0, 1);
+        const result = await KanbanService.moveCardToList(lists, 0, 0, 1);
 
         expect(result[0].cards).toHaveLength(1);
         expect(result[1].cards).toHaveLength(2);

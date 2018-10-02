@@ -215,7 +215,7 @@ describe("Board Component", () => {
         lists: [{ id: 0, cards: [{ id: 0 }, { id: 1 }] }]
       });
 
-      boardComponent.instance().removeCard(0, 0);
+      boardComponent.instance().deleteCard(0, 0);
 
       expect(KanbanService.removeCard).toHaveBeenCalledWith(
         [{ id: 0, cards: [{ id: 0 }, { id: 1 }] }],

@@ -29,28 +29,31 @@ export default class Board extends React.Component {
     });
   }
 
-  addList() {
-    const result = KanbanService.addListToBoard(this.state.lists);
+  async addList() {
     this.setState({
-      lists: result
+      lists: await KanbanService.addListToBoard(this.state.lists)
     });
   }
 
-  deleteList(idList) {
+  async deleteList(idList) {
     this.setState({
-      lists: KanbanService.deleteList(this.state.lists, idList)
+      lists: await KanbanService.deleteList(this.state.lists, idList)
     });
   }
 
-  changeListName(id, newName) {
+  async changeListName(id, newName) {
     this.setState({
-      lists: KanbanService.changeListName(this.state.lists, id, newName)
+      lists: await KanbanService.changeListName(this.state.lists, id, newName)
     });
   }
 
-  changeListPosition(id, newPosition) {
+  async changeListPosition(id, newPosition) {
     this.setState({
-      lists: KanbanService.changeListPosition(this.state.lists, id, newPosition)
+      lists: await KanbanService.changeListPosition(
+        this.state.lists,
+        id,
+        newPosition
+      )
     });
   }
 
@@ -64,15 +67,15 @@ export default class Board extends React.Component {
     });
   }
 
-  removeCard(idList, idCard) {
+  async deleteCard(idList, idCard) {
     this.setState({
-      lists: KanbanService.removeCard(this.state.lists, idList, idCard)
+      lists: await KanbanService.removeCard(this.state.lists, idList, idCard)
     });
   }
 
-  moveCardToList(idCard, idList, idNewList) {
+  async moveCardToList(idCard, idList, idNewList) {
     this.setState({
-      lists: KanbanService.moveCardToList(
+      lists: await KanbanService.moveCardToList(
         this.state.lists,
         idCard,
         idList,
@@ -81,9 +84,9 @@ export default class Board extends React.Component {
     });
   }
 
-  changeCardName(idList, idCard, newName) {
+  async changeCardName(idList, idCard, newName) {
     this.setState({
-      lists: KanbanService.changeCardName(
+      lists: await KanbanService.changeCardName(
         this.state.lists,
         idList,
         idCard,
@@ -98,6 +101,8 @@ export default class Board extends React.Component {
       <div style={styles.board}>
         <div>{this.state.name}</div>
         <button onClick={() => this.addList()}>Add List</button>
+        <button onClick={() => this.addCard()}>Add Card</button>
+
         <div
           style={styles.boardLists}
           {...provided.droppableProps}
@@ -109,7 +114,15 @@ export default class Board extends React.Component {
                   return a.position - b.position;
                 })
                 .map((listData, index) => (
-                  <List key={index} data={listData} provided={provided} />
+                  <List
+                    key={index}
+                    data={listData}
+                    provided={provided}
+                    changeCardNameHandler={this.changeCardName.bind(this)}
+                    deleteCardHandler={this.deleteCard.bind(this)}
+                    changeNameHandler={this.changeListName.bind(this)}
+                    deleteHandler={this.deleteList.bind(this)}
+                  />
                 ))
             : null}
         </div>
