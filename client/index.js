@@ -12,11 +12,7 @@ class App extends React.Component {
   }
 
   render() {
-    return (
-      <div style={{ height: "100%" }}>
-        <BoardDroppable />
-      </div>
-    );
+    return <Board />;
   }
 }
 
