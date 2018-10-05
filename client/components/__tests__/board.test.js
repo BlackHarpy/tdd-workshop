@@ -1,21 +1,13 @@
 import React from "react";
-import { shallow, mount } from "enzyme";
+import { shallow } from "enzyme";
 import Board from "../board";
 import List from "../list";
 import KanbanService from "../../services/kanban.service";
 
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
 jest.mock("../../services/kanban.service", () => ({
   getBoardLists: jest.fn(() => []),
   changeListName: jest.fn(() => []),
-  addListToBoard: jest.fn(() => []),
-  deleteList: jest.fn(() => []),
-  changeListPosition: jest.fn(() => []),
-  changeCardName: jest.fn(() => []),
-  addCardToList: jest.fn(() => {}),
-  removeCard: jest.fn(() => []),
-  moveCardToList: jest.fn(() => [])
+  changeCardName: jest.fn(() => [])
 }));
 
 describe("Board Component", () => {
@@ -53,15 +45,6 @@ describe("Board Component", () => {
         <Board provided={{ droppableProps: {} }} />
       );
       expect(boardComponent.contains(<div>My Board</div>)).toEqual(true);
-    });
-
-    it("Should change Board name", () => {
-      const boardComponent = shallow(
-        <Board provided={{ droppableProps: {} }} />
-      );
-      boardComponent.instance().changeName("New name");
-
-      expect(boardComponent.state("name")).toEqual("New name");
     });
   });
 
@@ -102,61 +85,6 @@ describe("Board Component", () => {
         );
       });
     });
-
-    describe("Add List", () => {
-      it("Should create a new list", () => {
-        const boardComponent = shallow(
-          <Board provided={{ droppableProps: {} }} />
-        );
-        boardComponent.instance().addList();
-
-        expect(KanbanService.addListToBoard).toHaveBeenCalledWith([]);
-      });
-    });
-
-    describe("Remove List", () => {
-      it("Should delete a list", () => {
-        const boardComponent = shallow(
-          <Board provided={{ droppableProps: {} }} />
-        );
-        boardComponent.setState({
-          lists: [{ id: 0 }, { id: 1 }, { id: 2 }]
-        });
-
-        boardComponent.instance().deleteList(1);
-
-        expect(KanbanService.deleteList).toHaveBeenCalledWith(
-          [{ id: 0 }, { id: 1 }, { id: 2 }],
-          1
-        );
-      });
-    });
-
-    describe("Move List", () => {
-      it("Should change list position", () => {
-        const boardComponent = shallow(
-          <Board provided={{ droppableProps: {} }} />
-        );
-        boardComponent.setState({
-          lists: [
-            { id: 0, position: 0, name: "List 1" },
-            { id: 1, position: 1, name: "List 2" },
-            { id: 2, position: 2, name: "List 3" }
-          ]
-        });
-
-        boardComponent.instance().changeListPosition(0, 2);
-        expect(KanbanService.changeListPosition).toHaveBeenCalledWith(
-          [
-            { id: 0, position: 0, name: "List 1" },
-            { id: 1, position: 1, name: "List 2" },
-            { id: 2, position: 2, name: "List 3" }
-          ],
-          0,
-          2
-        );
-      });
-    });
   });
 
   describe("Basic cards methods", () => {
@@ -182,78 +110,6 @@ describe("Board Component", () => {
         0,
         0,
         "New Name"
-      );
-    });
-  });
-
-  describe("Add cards methods", () => {
-    it("Should add card to list", () => {
-      const boardComponent = shallow(
-        <Board provided={{ droppableProps: {} }} />
-      );
-
-      boardComponent.setState({
-        lists: [{ id: 0, cards: [] }, { id: 1, cards: [] }]
-      });
-
-      boardComponent.instance().addCard(0, { name: "Task 1" });
-      expect(KanbanService.addCardToList).toHaveBeenCalledWith([
-        { id: 0, cards: [] },
-        { id: 1, cards: [] }
-      ]);
-    });
-  });
-
-  describe("Remove card methods", () => {
-    it("Should remove card in a list", () => {
-      const boardComponent = shallow(
-        <Board provided={{ droppableProps: {} }} />
-      );
-
-      boardComponent.setState({
-        lists: [{ id: 0, cards: [{ id: 0 }, { id: 1 }] }]
-      });
-
-      boardComponent.instance().deleteCard(0, 0);
-
-      expect(KanbanService.removeCard).toHaveBeenCalledWith(
-        [{ id: 0, cards: [{ id: 0 }, { id: 1 }] }],
-        0,
-        0
-      );
-    });
-  });
-
-  describe("Card moving tests", () => {
-    it("Should move card to another list", () => {
-      const boardComponent = shallow(
-        <Board provided={{ droppableProps: {} }} />
-      );
-
-      boardComponent.setState({
-        lists: [
-          {
-            id: 0,
-            position: 0,
-            cards: [{ id: 0 }, { id: 1 }]
-          },
-          { id: 1, position: 1, cards: [] }
-        ]
-      });
-
-      boardComponent.instance().moveCardToList(0, 0, 1);
-      expect(KanbanService.moveCardToList).toHaveBeenCalledWith(
-        [
-          {
-            id: 0,
-            position: 0,
-            cards: [{ id: 0 }, { id: 1 }]
-          },
-          { id: 1, position: 1, cards: [] }
-        ],
-        0,
-        0,
-        1
       );
     });
   });

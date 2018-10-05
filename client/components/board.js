@@ -23,61 +23,34 @@ export default class Board extends React.Component {
     });
   }
 
-  changeName(newName) {
+  changeListName(id, newName) {
     this.setState({
-      name: newName
+      lists: KanbanService.changeListName(this.state.lists, id, newName)
     });
   }
 
-  async addList() {
-    this.setState({
-      lists: await KanbanService.addListToBoard(this.state.lists)
-    });
+  addList() {
+    console.log("Add List function missing!");
   }
 
-  async deleteList(idList) {
-    this.setState({
-      lists: await KanbanService.deleteList(this.state.lists, idList)
-    });
+  deleteList(idList) {
+    console.log("Delete List function missing!");
   }
 
-  async changeListName(id, newName) {
-    this.setState({
-      lists: await KanbanService.changeListName(this.state.lists, id, newName)
-    });
+  changeListPosition(id, newPosition) {
+    console.log("Change list posisition function missiing!");
   }
 
-  async changeListPosition(id, newPosition) {
-    this.setState({
-      lists: await KanbanService.changeListPosition(
-        this.state.lists,
-        id,
-        newPosition
-      )
-    });
+  addCard() {
+    console.log("Add Card function missiing!");
   }
 
-  async addCard() {
-    this.setState({
-      lists: await KanbanService.addCardToList(this.state.lists)
-    });
+  deleteCard(idList, idCard) {
+    console.log("Delete Card function missing!");
   }
 
-  async deleteCard(idList, idCard) {
-    this.setState({
-      lists: await KanbanService.removeCard(this.state.lists, idList, idCard)
-    });
-  }
-
-  async moveCardToList(idCard, idList, idNewList) {
-    this.setState({
-      lists: await KanbanService.moveCardToList(
-        this.state.lists,
-        idCard,
-        idList,
-        idNewList
-      )
-    });
+  moveCardToList(idCard, idList, idNewList) {
+    console.log("Move card to list function missing!");
   }
 
   async changeCardName(idList, idCard, newName) {
