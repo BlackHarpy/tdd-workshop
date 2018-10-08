@@ -4,9 +4,9 @@
   "private": true,
   "proxy": "http://localhost:8080",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open",
+    "client": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production",
-    "conc": "concurrently \"npm run server\" \"npm start\"",
+    "start": "concurrently \"npm run server\" \"npm client\"",
     "test": "cross-env NODE_ENV=test jest --watch",
     "server": "node server/index.js",
     "test:coverage": "cross-env NODE_ENV=test jest --coverage"
